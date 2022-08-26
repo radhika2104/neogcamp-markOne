@@ -33,8 +33,9 @@ From the directory where the all the files exist, run below command in terminal
 ## URL for App
 
 
-This CLI App was created using Repl
-Note: repl.run is now deprecated. To run the app, click on run after opening the URL.
+This CLI App was created using Repl.
 
 URL - https://replit.com/@radhika2104/quizapp?v=1?embed=1&output=1
+
+Note: repl.run is now deprecated. To run the app, click on run after opening the URL.
 
