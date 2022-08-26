@@ -34,7 +34,7 @@ From the directory where the all the files exist, run below command in terminal
 
 
 This CLI App was created using Repl
-Note: repl.run is now deprecated.
+Note: repl.run is now deprecated. To run the app, click on run after opening the URL.
 
 URL - https://replit.com/@radhika2104/quizapp?v=1?embed=1&output=1
 
