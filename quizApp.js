@@ -1,19 +1,29 @@
 
+const chalk = require('chalk');
 var readlineSync = require('readline-sync');
 var username = readlineSync.question('Please enter your name: ');
-console.log('Welcome, ' + username.charAt(0).toUpperCase() + username.substr(1) + '!');
-console.log('Topic for this trivia game is '+ 'World Economics'+ '!')
+
+console.log('Welcome, ' + chalk.magenta(username.charAt(0).toUpperCase()) + chalk.magenta(username.substr(1)) + '!');
+console.log(chalk.yellow('Topic for this quiz game is '+ 'World Economics'+ '!'))
 console.log('');
-console.log('Game Guidelines:');
-console.log('');
-console.log('To exit the quiz game, press Ctrl+C again');
-console.log('');
-console.log('Enter "a","b" or "c" to select any option and press Enter.');
-console.log('');
-console.log('In Beginner Level, On a right answer, you will earn 2 points and on a wrong answer you will lose 1 point.');
-console.log('In Novice Level, On a right answer, you will earn 3 points and on a wrong answer you will lose 1 point.');
-console.log('In Competent Level, On a right answer, you will earn 4 points and on a wrong answer you will lose 2 point.');
-console.log('');
+
+boolresponse = readlineSync.keyInYN('Do you want to review game and scoring guidelines? ');
+if (boolresponse) {
+  console.log('');
+  console.log(chalk.underline('Game Guidelines:'));
+  console.log('');
+  console.log('To exit the quiz game, press Ctrl+C again');
+  console.log('');
+  console.log('Enter "a","b" or "c" to select any option and press Enter.');
+  console.log('');
+  console.log(chalk.underline('Scoring System'));
+  console.log('1. In Beginner Level, On a right answer, you will earn 2 points and on a wrong answer you will lose 1 point.');
+  console.log('2. In Novice Level, On a right answer, you will earn 3 points and on a wrong answer you will lose 1 point.');
+  console.log('3. In Competent Level, On a right answer, you will earn 4 points and on a wrong answer you will lose 2 point.');
+  console.log('');
+
+
+}
 
 var player = {
   name: 'Ruchika',
@@ -22,16 +32,16 @@ var player = {
 
 var HighScores = [player]
 
-function printScoreBoard(){
+function printScoreBoard() {
   console.log('')
-  console.log('Scoreboard: ');
+  console.log(chalk.underline('Scoreboard:'));
   console.log(HighScores[0].name + ' : ' + HighScores[0].score);
   console.log('')
 }
 
 printScoreBoard()
 
-console.log(`Let\'s see if you can beat the highest score ${player.score}. All the best!`);
+console.log(chalk.yellow(`Let\'s see if you can beat the highest score ${player.score}. All the best!`));
 console.log('');
 
 var questionOne = {
@@ -85,12 +95,12 @@ var questionTen = {
 }
 
 var questionEleven = {
-  question: '1. The task force of blue economy for sustainable development is a collaboration between India and which country? \n a. Switzerland \n b. France \n c. Norway \n ',
+  question: 'Qs. The task force of blue economy for sustainable development is a collaboration between India and which country? \n a. Switzerland \n b. France \n c. Norway \n ',
   answer: 'c'
 }
 
 var questionTwelve = {
-  question: '1. A country is said to be in a debt trap if - \n a. It has to abide by the conditionalities imposed by the International Monetary Fund \n b. It has to borrow to make interest payments on outstanding loans \n c. The World Bank charges a very high rate of interest on outstanding & new loans \n ',
+  question: 'Qs. A country is said to be in a debt trap if - \n a. It has to abide by the conditionalities imposed by the International Monetary Fund \n b. It has to borrow to make interest payments on outstanding loans \n c. The World Bank charges a very high rate of interest on outstanding & new loans \n ',
   answer: 'b'
 }
 
@@ -113,44 +123,49 @@ var gameScore = 0;
   
 
 function playLevelTwo(questionArray) {
-  console.log('Level 2 (Competent): ');
+  console.log('');
+  console.log(chalk.underline('Level 2 (Competent):'));
   console.log('');
   for (var i = 0; i < questionArray.length; i++) {
     var input = readlineSync.question(questionArray[i].question);
-    if (input === questionArray[i].answer) {
+    if (!(isNaN(input))) {
+      var input = NumberInputToletter(input);
+    }
+    if (input.toLowerCase() === questionArray[i].answer) {
       gameScore += 4
-      console.log('You are right! Your new score is ' + gameScore)
+      console.log(chalk.yellow.italic('You are right! Your new score is ' + gameScore))
     }
     else {
       gameScore -= 2
-      console.log('Oops! You are wrong. Your new score is ' + gameScore)
+      console.log(chalk.yellow.italic('Oops! You are wrong. Your new score is ' + gameScore))
     }
     console.log('');
   }
   
   if (gameScore >= 18) {
-    console.log('Wow! You are a star.');
-    console.log('Your score is ' + gameScore);
+    console.log(chalk.cyan('Wow! You are a star.'));
+    console.log(chalk.magenta('Your score is ' + gameScore));
   } else {
-    console.log('Game Over!');
-    console.log('Your score is ' + gameScore);
+    console.log(chalk.magenta('Game Over!'));
+    console.log(chalk.magenta('Your score is ' + gameScore));
   }
   if (gameScore >= HighScores[0].score) {
     HighScores[0].name = username
     HighScores[0].score = gameScore
-    console.log('You just made a new High Score!')
+    console.log(chalk.cyan('You just made a new High Score!'))
     console.log('\n Updating ScoreBoard...\n')
     printScoreBoard()
     }
 }
 
 function playLevelOne(questionArray) {
-  console.log('Level 1 (Novice): ');
+  console.log('');
+  console.log(chalk.underline('Level 1 (Novice):'));
   console.log('');
   LevelTwo = null;
   for (var i = 0; i < questionArray.length; i++) {
     if (gameScore >= 10) {
-      console.log("Bravo!! You have been promoted to Competent!");
+      console.log(chalk.magenta("Bravo!! You have been promoted to Competent!"));
       console.log();
       console.log();
       LevelTwo = true;
@@ -158,13 +173,16 @@ function playLevelOne(questionArray) {
     }
     else {
       var input = readlineSync.question(questionArray[i].question);
-      if (input === questionArray[i].answer) {
+      if (!(isNaN(input))) {
+        var input = NumberInputToletter(input);
+      }
+      if (input.toLowerCase() === questionArray[i].answer) {
         gameScore += 3
-        console.log('You are right! Your new score is ' + gameScore)
+        console.log(chalk.yellow.italic('You are right! Your new score is ' + gameScore))
       }
       else {
         gameScore -= 1
-        console.log('Oops! You are wrong. Your new score is ' + gameScore)
+        console.log(chalk.yellow.italic('Oops! You are wrong. Your new score is ' + gameScore))
       }
     }
     console.log('');
@@ -172,44 +190,59 @@ function playLevelOne(questionArray) {
   if (LevelTwo === true) {
     playLevelTwo(Level2);
   } else {
-    console.log('Your game score is: ' + gameScore)
+    console.log(chalk.magenta('Your game score is: ' + gameScore))
     if (gameScore >= HighScores[0].score) {
       HighScores[0].name = username
       HighScores[0].score = gameScore
-      console.log('You just made a new High Score!')
+      console.log(chalk.cyan('You just made a new High Score!'))
       console.log('\n Updating ScoreBoard...\n')
       printScoreBoard()
     }
-    console.log('Game Over! You were just one LEVEL away from highest. Try again!');
+    console.log(chalk.magenta('Game Over! You were just one LEVEL away from highest. Try again!'));
     
   }
 }
 
+function NumberInputToletter(num) {
+  if (num === '1') {
+    input = 'a';
+  } else if (num === '2') {
+    input = 'b';
+  } else if (num === '3') {
+    input = 'c';
+  }
+  return input
+}
+
 function game(Level0) {
-  console.log('Level 0 (Beginner): ');
+  console.log('')
+  console.log(chalk.underline('Level 0 (Beginner):'));
   console.log('');
   LevelOne = null;
   LevelTwo = null;
 
   for (var i = 0; i < Level0.length; i++) {
     if (gameScore >= 4 && LevelOne !== true) {
-      console.log("Bravo!! You have been promoted to Novice!");
+      console.log(chalk.magenta("Bravo!! You have been promoted to Novice!"));
       console.log();
       
       LevelOne = true;
-      console.log("See if you can answer more to directly play Competent!")
+      console.log(chalk.magenta("See if you can answer more to directly play Competent!"))
       console.log();
       var input = readlineSync.question(Level0[i].question);
-      if (input === Level0[i].answer) {
+      if (!(isNaN(input))) {
+        var input = NumberInputToletter(input);
+      }
+      if (input.toLowerCase() === Level0[i].answer) {
         gameScore += 2
-        console.log('You are right! Your new score is ' + gameScore)
+        console.log(chalk.yellow.italic('You are right! Your new score is ' + gameScore))
       } else {
         gameScore -= 1
-        console.log('Oops! You are wrong. Your new score is ' + gameScore)
+        console.log(chalk.yellow.italic('Oops! You are wrong. Your new score is ' + gameScore))
       }
     }
     else if (gameScore >= 6) {
-      console.log("Wohoo!! You just skipped a level. You have been promoted to Competent!");
+      console.log(chalk.magenta("Wohoo!! You just skipped a level. You have been promoted to Competent!"));
       LevelTwo = true;
       console.log();
       console.log();
@@ -217,12 +250,15 @@ function game(Level0) {
     }
     else{
       var input = readlineSync.question(Level0[i].question);
-      if (input === Level0[i].answer) {
+      if (!(isNaN(input))) {
+        var input = NumberInputToletter(input);
+      }
+      if (input.toLowerCase() === Level0[i].answer) {
         gameScore += 2
-        console.log('You are right! Your new score is ' + gameScore)
+        console.log(chalk.yellow.italic('You are right! Your new score is ' + gameScore))
       } else {
         gameScore -= 1
-        console.log('Oops! You are wrong. Your new score is ' + gameScore)
+        console.log(chalk.yellow.italic('Oops! You are wrong. Your new score is ' + gameScore))
       }
     }
     
@@ -233,22 +269,28 @@ function game(Level0) {
     playLevelTwo(Level2);
   }
   else if ((LevelOne === true && LevelTwo !== true) || (gameScore >= 4)) {
-    console.log('You have qualified for LEVEL 1...')
+    console.log(chalk.magenta('You have qualified for LEVEL 1...'))
     playLevelOne(Level1);
   } 
   else {
-    console.log('Your game score is: ' + gameScore)
+    console.log(chalk.yellow.magenta('Your game score is: ' + gameScore))
     if (gameScore >= HighScores[0].score) {
       HighScores[0].name = username
       HighScores[0].score = gameScore
-      console.log('You just made a new High Score! Send us a screenshot to update the high score.')
+      console.log(chalk.cyan('You just made a new High Score! Send us a screenshot to update the high score.'))
       console.log('\n Updating ScoreBoard...\n')
       printScoreBoard()
     }
-    console.log('Game Over! Try better next time for higher levels!')
+    console.log(chalk.magenta('Game Over! Try better next time for higher levels!'))
     
   }
 
 }
 
-game(Level0)
+boolPlaygame = readlineSync.keyInYN(['Press "Y" to start game or press "N" to exit..'])
+if (boolPlaygame === true) {
+  game(Level0)
+} else {
+  process.exit();
+}
+
